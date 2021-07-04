@@ -1,0 +1,87 @@
+<!-- i am tired of placing comments saying that i did not translated -->
+<!DOCTYPE html>
+<html lang = 'pt-BR'>
+	<head>
+		<meta charset = 'utf-8' name = 'viewport' content = 'width = device-width, initial-scale = 1'>
+		<title>fibonacci sphere</title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+		<script src = 'http://threejs.org/build/three.min.js'></script>
+		<script src = 'http://threejs.org/examples/js/controls/OrbitControls.js'></script>
+		<script src = 'TrackballControls.js'></script>
+	</head>
+	<body>
+		<canvas id = 'canvas'></canvas>
+		<input id = 'id' min = 4 max = 8192 value = 500 type = 'range' style = 'position: absolute;top: 0px;'>
+		<script type = 'module'>
+			import {ConvexGeometry} from 'https://threejs.org/examples/jsm/geometries/ConvexGeometry.js';
+			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
+			renderizador.setSize(window.innerWidth, window.innerHeight);
+			document.body.append(renderizador.domElement);
+
+			var fov = 90 * document.body.clientHeight / document.body.clientWidth;
+			var aspecto = document.body.clientWidth / document.body.clientHeight;
+			var maximo_perto = 0.1;
+			var maximo_longe = 8.988465674311579e+307;
+			var camera = new THREE.PerspectiveCamera(fov, aspecto, maximo_perto, maximo_longe);
+
+			var controles = new TrackballControls(camera, renderizador.domElement);
+			camera.position.z = 400;
+			controles.rotateSpeed = 5;
+			controles.noPan = true;
+			controles.minDistance = 101;
+			controles.dynamicDampingFactor = 0.1;
+
+			var cena = new THREE.Scene();
+			cena.background = new THREE.Color(0xffffff);
+
+			var geometria_esfera = new THREE.SphereGeometry(1, 8, 8);
+			var material_esfera = new THREE.MeshBasicMaterial({color: 0x000000});
+			var material_hull = new THREE.MeshNormalMaterial();
+
+			var n = 500;
+			function esfera_de_fibonacci() {
+				cena.children = [];
+				var vertices = [];
+				n = Number(document.getElementById('id').value);
+				for(var i = 0;i < n;i++) {
+					var theta = i * Math.PI * (1 + Math.sqrt(5));
+					var phi = Math.acos(1 - 2 * (i + 0.5) / n)
+					var esfera = new THREE.Mesh(geometria_esfera, material_esfera);
+					var x = 100 * Math.sin(phi) * Math.cos(theta);
+					var y = 100 * Math.sin(phi) * Math.sin(theta);
+					var z = -100 * Math.cos(phi);
+					vertices.push(new THREE.Vector3(x, y, z));
+					esfera.position.set(x, y, z);
+					cena.add(esfera);
+				}
+				var geometria = new ConvexGeometry(vertices);
+				var mesh = new THREE.Mesh(geometria, material_hull);
+				cena.add(mesh);
+			}
+			function renderizar() {
+				controles.update();
+				renderizador.render(cena, camera);
+				requestAnimationFrame(renderizar);
+			}
+			esfera_de_fibonacci();
+			renderizar();
+
+
+			var passive = false;
+			try {
+				window.addEventListener('event-listener', null, Object.defineProperty({}, 'passive', {get: () => passive = {passive: true}}));
+			} catch(error) {}
+
+			var mouse_pressionado = false;
+			window.addEventListener('resize', function(e) {
+				renderizador.setSize(window.innerWidth, window.innerHeight);
+			}, passive);
+			document.getElementById('id').addEventListener('input', esfera_de_fibonacci, passive);
+		</script>
+	</body>
+</html>
