@@ -10,14 +10,15 @@
 				overflow: hidden;
 			}
 		</style>
-		<script src = 'https://threejs.org/build/three.min.js'></script>
-		<script src = 'TrackballControls.js'></script>
+		<script src = 'three.min.js'></script>
+		<script src = 'TrackBallControls.js'></script>
+		<script src = 'ConvexHull.js'></script>
+		<script src = 'ConvexGeometry.js'></script>
 	</head>
 	<body>
 		<canvas id = 'canvas'></canvas>
 		<input id = 'id' min = 4 max = 8192 value = 500 type = 'range' style = 'position: absolute;top: 0px;'>
-		<script type = 'module'>
-			import {ConvexGeometry} from 'https://threejs.org/examples/jsm/geometries/ConvexGeometry.js';
+		<script>
 			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
 			renderizador.setSize(window.innerWidth, window.innerHeight);
 			document.body.append(renderizador.domElement);
