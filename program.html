@@ -76,7 +76,7 @@
 			var camera = new THREE.PerspectiveCamera(fov, aspecto, maximo_perto, maximo_longe);
 
 			var controles = new TrackballControls(camera, renderizador.domElement);
-			camera.position.z = 400;
+			camera.position.z = raio_esfera + 256;
 			controles.noPan = true;
 			controles.minDistance = raio_esfera + raio_ponto + maximo_perto;
 			controles.dynamicDampingFactor = 0.1;
