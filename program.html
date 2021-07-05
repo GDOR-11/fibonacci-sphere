@@ -68,7 +68,7 @@
 
 			var fov = FOV(window.innerWidth, window.innerHeight);
 			var aspecto = window.innerWidth / window.innerHeight;
-			var maximo_perto = 0.1;
+			var maximo_perto = 1;
 			var maximo_longe = 8.988465674311579e+307;
 			var camera = new THREE.PerspectiveCamera(fov, aspecto, maximo_perto, maximo_longe);
 
@@ -76,7 +76,7 @@
 			camera.position.z = 400;
 			controles.rotateSpeed = 5;
 			controles.noPan = true;
-			controles.minDistance = 101.1; // fibonacci sphere radius + vertex radius + near clip
+			controles.minDistance = 102; // fibonacci sphere radius + vertex radius + near clip
 			controles.dynamicDampingFactor = 0.1;
 
 			var cena = new THREE.Scene();
