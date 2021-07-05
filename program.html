@@ -65,7 +65,7 @@
 			var raio_esfera = 100;
 			var raio_ponto = 1;
 
-			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
+			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
 			renderizador.setSize(window.innerWidth, window.innerHeight);
 			document.body.append(renderizador.domElement);
 
