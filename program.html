@@ -19,31 +19,30 @@
 		<canvas id = 'canvas'></canvas>
 		<input id = 'id' min = 4 max = 8192 value = 500 type = 'range' style = 'position: absolute;top: 0px;'>
 		<script>
-			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
-			renderizador.setSize(window.innerWidth, window.innerHeight);
-			document.body.append(renderizador.domElement);
+			function cm_para_pixels() {
+				var div = document.createElement('div');
+				div.style.width = '1cm';
+				document.body.append(div);
+				var resultado = div.clientWidth;
+				div.parentNode.removeChild(div);
+				return resultado;
+			}
+			function FOV(largura, altura) {
+				var pixels_para_cm = 1 / cm_para_pixels();
+				var largura_cm = largura * pixels_para_cm;
+				var altura_cm = altura * pixels_para_cm;
 
-			var fov = 90 * document.body.clientHeight / document.body.clientWidth;
-			var aspecto = document.body.clientWidth / document.body.clientHeight;
-			var maximo_perto = 0.1;
-			var maximo_longe = 8.988465674311579e+307;
-			var camera = new THREE.PerspectiveCamera(fov, aspecto, maximo_perto, maximo_longe);
+				var aspecto = largura_cm / altura_cm;
 
-			var controles = new TrackballControls(camera, renderizador.domElement);
-			camera.position.z = 400;
-			controles.rotateSpeed = 5;
-			controles.noPan = true;
-			controles.minDistance = 101.1; // fibonacci sphere radius + vertex radius + near clip
-			controles.dynamicDampingFactor = 0.1;
+				var tamanho_diagonal = Math.hypot(largura_cm, altura_cm);
 
-			var cena = new THREE.Scene();
-			cena.background = new THREE.Color(0xffffff);
+				var distancia_tela = 30; // 30cm
 
-			var geometria_esfera = new THREE.SphereGeometry(1, 8, 8);
-			var material_esfera = new THREE.MeshBasicMaterial({color: 0x000000});
-			var material_hull = new THREE.MeshNormalMaterial();
+				var radianos = 2 * Math.atan(largura_cm / (2 * distancia_tela));
+				var graus = radianos * 180 / Math.PI;
 
-			var n = 500;
+				return graus;
+			}
 			function esfera_de_fibonacci() {
 				cena.children = [];
 				var vertices = [];
@@ -63,6 +62,31 @@
 				var mesh = new THREE.Mesh(geometria, material_hull);
 				cena.add(mesh);
 			}
+			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
+			renderizador.setSize(window.innerWidth, window.innerHeight);
+			document.body.append(renderizador.domElement);
+
+			var fov = FOV(window.innerWidth, window.innerHeight);
+			var aspecto = window.innerWidth / window.innerHeight;
+			var maximo_perto = 0.1;
+			var maximo_longe = 8.988465674311579e+307;
+			var camera = new THREE.PerspectiveCamera(fov, aspecto, maximo_perto, maximo_longe);
+
+			var controles = new TrackballControls(camera, renderizador.domElement);
+			camera.position.z = 400;
+			controles.rotateSpeed = 5;
+			controles.noPan = true;
+			controles.minDistance = 101.1; // fibonacci sphere radius + vertex radius + near clip
+			controles.dynamicDampingFactor = 0.1;
+
+			var cena = new THREE.Scene();
+			cena.background = new THREE.Color(0xffffff);
+
+			var geometria_esfera = new THREE.SphereGeometry(1, 8, 8);
+			var material_esfera = new THREE.MeshBasicMaterial({color: 0x000000});
+			var material_hull = new THREE.MeshNormalMaterial();
+
+			var n = 500;
 			function renderizar() {
 				controles.update();
 				renderizador.render(cena, camera);
