@@ -50,18 +50,21 @@
 				for(var i = 0;i < n;i++) {
 					var theta = i * Math.PI * (1 + Math.sqrt(5));
 					var phi = Math.acos(1 - 2 * (i + 0.5) / n)
-					var esfera = new THREE.Mesh(geometria_esfera, material_esfera);
-					var x = 100 * Math.sin(phi) * Math.cos(theta);
-					var y = 100 * Math.sin(phi) * Math.sin(theta);
-					var z = -100 * Math.cos(phi);
+					var ponto = new THREE.Mesh(geometria_ponto, material_ponto);
+					var x = raio_esfera * Math.sin(phi) * Math.cos(theta);
+					var y = raio_esfera * Math.sin(phi) * Math.sin(theta);
+					var z = -raio_esfera * Math.cos(phi);
 					vertices.push(new THREE.Vector3(x, y, z));
-					esfera.position.set(x, y, z);
-					cena.add(esfera);
+					ponto.position.set(x, y, z);
+					cena.add(ponto);
 				}
 				var geometria = new ConvexGeometry(vertices);
-				var mesh = new THREE.Mesh(geometria, material_hull);
+				var mesh = new THREE.Mesh(geometria, material_esfera);
 				cena.add(mesh);
 			}
+			var raio_esfera = 100;
+			var raio_ponto = 1;
+
 			var renderizador = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
 			renderizador.setSize(window.innerWidth, window.innerHeight);
 			document.body.append(renderizador.domElement);
@@ -74,20 +77,21 @@
 
 			var controles = new TrackballControls(camera, renderizador.domElement);
 			camera.position.z = 400;
-			controles.rotateSpeed = 5;
 			controles.noPan = true;
-			controles.minDistance = 102; // fibonacci sphere radius + vertex radius + near clip
+			controles.minDistance = raio_esfera + raio_ponto + maximo_perto;
 			controles.dynamicDampingFactor = 0.1;
 
 			var cena = new THREE.Scene();
 			cena.background = new THREE.Color(0xffffff);
 
-			var geometria_esfera = new THREE.SphereGeometry(1, 8, 8);
-			var material_esfera = new THREE.MeshBasicMaterial({color: 0x000000});
-			var material_hull = new THREE.MeshNormalMaterial();
+			var geometria_ponto = new THREE.SphereGeometry(raio_ponto, 8, 8);
+			var material_ponto = new THREE.MeshBasicMaterial({color: 0x000000});
+			var material_esfera = new THREE.MeshNormalMaterial();
 
 			var n = 500;
 			function renderizar() {
+				var distancia_esfera = camera.position.length() - raio_esfera;
+				controles.rotateSpeed = distancia_esfera / 64;
 				controles.update();
 				renderizador.render(cena, camera);
 				requestAnimationFrame(renderizar);
