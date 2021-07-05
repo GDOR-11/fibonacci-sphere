@@ -394,15 +394,15 @@ class TrackballControls extends THREE.EventDispatcher {
 			switch ( _pointers.length ) {
 				case 1:
 					_movePrev.copy( _moveCurr );
-					_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
+					_moveCurr.copy( getMouseOnCircle( -event.pageX, -event.pageY ) );
 					break;
 				default: // 2 or more
 					const position = getSecondPointerPosition( event );
-					const dx = event.pageX - position.x;
-					const dy = event.pageY - position.y;
+					const dx = position.x - event.pageX;
+					const dy = position.y - event.pageY;
 					_touchZoomDistanceEnd = Math.sqrt( dx * dx + dy * dy );
-					const x = ( event.pageX + position.x ) / 2;
-					const y = ( event.pageY + position.y ) / 2;
+					const x = -( event.pageX + position.x ) / 2;
+					const y = -( event.pageY + position.y ) / 2;
 					_panEnd.copy( getMouseOnScreen( x, y ) );
 					break;
 			}
@@ -414,7 +414,7 @@ class TrackballControls extends THREE.EventDispatcher {
 					break;
 				case 1:
 					_state = STATE.TOUCH_ROTATE;
-					_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
+					_moveCurr.copy( getMouseOnCircle( -event.pageX, -event.pageY ) );
 					_movePrev.copy( _moveCurr );
 					break;
 			}
