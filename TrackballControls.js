@@ -394,7 +394,7 @@ class TrackballControls extends THREE.EventDispatcher {
 			switch ( _pointers.length ) {
 				case 1:
 					_movePrev.copy( _moveCurr );
-					_moveCurr.copy( getMouseOnCircle( -event.pageX, -event.pageY ) );
+					_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
 					break;
 				default: // 2 or more
 					const position = getSecondPointerPosition( event );
