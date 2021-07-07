@@ -45,6 +45,7 @@
 			}
 			function esfera_de_fibonacci() {
 				cena.children = [];
+				pontos = [];
 				var vertices = [];
 				n = Number(document.getElementById('id').value);
 				for(var i = 0;i < n;i++) {
@@ -57,6 +58,7 @@
 					vertices.push(new THREE.Vector3(x, y, z));
 					ponto.position.set(x, y, z);
 					cena.add(ponto);
+					pontos.push(ponto);
 				}
 				var geometria = new ConvexGeometry(vertices);
 				var mesh = new THREE.Mesh(geometria, material_esfera);
@@ -88,6 +90,7 @@
 			var material_ponto = new THREE.MeshBasicMaterial({color: 0x000000});
 			var material_esfera = new THREE.MeshNormalMaterial();
 
+			var pontos = [];
 			var n = 500;
 			function renderizar() {
 				var distancia_esfera = camera.position.length() - raio_esfera;
