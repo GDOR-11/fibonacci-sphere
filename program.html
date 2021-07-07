@@ -96,7 +96,7 @@
 				var distancia_esfera = camera.position.length() - raio_esfera;
 				controles.rotateSpeed = distancia_esfera / 64;
 				controles.update();
-				material_ponto = new THREE.MeshBasicMaterial({color: 0x000000, opacity: 1024 / distancia_esfera, transparent: true});
+				material_ponto = new THREE.MeshBasicMaterial({color: 0x000000, opacity: 2048 / distancia_esfera, transparent: true});
 				for(var ponto of pontos) {
 					ponto.material = material_ponto;
 				}
